@@ -70,3 +70,33 @@ def solution2(num1, num2):
 
 print(solution2('398746', '199234'))
 # '199512'
+
+
+# Quiz 3
+# https://codesignal.com/learn/course/93/unit/4/practice/3
+
+def solution3(num1, num2):
+    # TODO: Implement Function
+    if num1 == "0" or num2 =="0":
+        return "0"
+        
+    result = ["0"] * (len(num1) + len(num2))
+    
+    for i in range(len(num1) -1 , -1, -1):
+        for j in range(len(num2) -1, -1, -1):
+            n1 = int(num1[i])
+            n2 = int(num2[j])
+            mul = n1 * n2
+            p1 = i + j 
+            p2 = i + j + 1
+            
+            total = mul + int(result[p2])
+            result[p2] = total%10
+            result[p1] = int(result[p1]) + total//10
+
+    ans = "".join(map(str, result)).lstrip("0")
+    print(ans)
+    return ans
+
+solution3("123456789", "987654321")
+# 121932631112635269
