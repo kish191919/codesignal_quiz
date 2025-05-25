@@ -45,36 +45,3 @@ arrayB = [5, 4, 3, 2, 1]
 
 solution1(arrayA, arrayB)
 #expected_output = [1, 4, 3, 2, 5]
-
-
-# Quiz 2
-# https://codesignal.com/learn/course/93/unit/3/practice/2
-
-def evaluatePath(numbers):
-    # TODO: implement the function
-    n = len(numbers)
-    position = 0
-    moves = 0
-    reversed_direction = False
-    
-    while True:
-        step = numbers[position]
-        
-        if step == 0:
-            return (position, moves)
-        
-        next_pos = position + step if not reversed_direction else position - step
-        
-        if 0 <= next_pos < n:
-            position = next_pos
-            moves +=1
-        else:
-            if not reversed_direction:
-                reversed_direction = True
-            else:
-                return (position, moves)
-
-numbers = [3, 4, 1, 1, -3, 1]
-print(evaluatePath(numbers))
-# (4, 5)
-
