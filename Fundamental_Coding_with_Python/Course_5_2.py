@@ -185,10 +185,7 @@ def solution3A(sentence):
 
     result = [ abs(ord(c) - count) for c, count in freq.items()]
     print(sorted(result))
-
     return sorted(result)
-
-
 
 sentence = "Hello, 123!"
 solution3A(sentence)
