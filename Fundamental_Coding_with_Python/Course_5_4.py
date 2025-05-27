@@ -84,3 +84,100 @@ dungeon = [0, -1, 1, 0, -1]
 health = 3
 solution1(dungeon, health)
 # 1
+
+
+def solution1A(dungeon, health):
+    # TODO: Implement the solution
+    n = len(dungeon)
+    best_x = -1
+    min_loss = float('inf')
+
+    for x in range(1, n + 1):
+        pos = 0
+        total_loss = 0
+        alive = True
+
+        while pos < n:
+            loss = dungeon[pos]
+            total_loss += loss
+            if health - total_loss <= 0:
+                alive = False
+                break
+            pos += x
+
+        if alive:
+            if total_loss < min_loss:
+                min_loss = total_loss
+                best_x = x
+
+    return best_x if best_x != -1 else -1
+
+print(solution1A(dungeon, health))
+
+# Quiz 2
+# https://codesignal.com/learn/course/94/unit/4/practice/2
+
+def largest_step(garden, start, direction):
+    length = len(garden)
+    i = 0
+    all_flowers = set(garden)
+    max_step = -1
+    
+    if length == 1:
+        return 1
+
+    for step in range(1, length):
+        result = set()
+        
+        if direction == 1:
+            for idx in range(start, length, step):
+                print(garden[idx])
+                if garden[idx] not in result:
+                    result.add(garden[idx])
+            
+            if sorted(result) == sorted(all_flowers):
+                max_step = max(max_step, step)
+        else:
+            for idx in range(start, -1, step * direction):
+                print(garden[idx])
+                if garden[idx] not in result:
+                    result.add(garden[idx])
+            if sorted(result) == sorted(all_flowers):
+                max_step = max(max_step, step)
+    print(max_step)
+    return max_step
+
+
+print("2-1")
+print(largest_step([1], 0, 1))
+# 1
+
+
+def largest_stepB(garden, start, direction):
+    # TODO: implement the function
+    n = len(set(garden))
+    garden_lenght = len(garden)
+    max_step = -1
+    
+    # 특별 케이스: 시작 지점 하나만으로 모든 꽃 종류를 커버하는 경우
+    if len({garden[start]}) == n:
+        return 1
+    
+    for step in range(1, garden_lenght):
+        visited = set()
+        pos = start
+        
+        while 0 <= pos < garden_lenght:
+            visited.add(garden[pos])
+            pos += step * direction
+        if len(visited) == n:
+            max_step = max(max_step, step)
+    print(max_step)
+    return max_step
+
+
+print("2-2")
+print(largest_stepB([1], 0, 1))
+# 1
+
+
