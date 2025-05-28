@@ -180,4 +180,40 @@ print("2-2")
 print(largest_stepB([1], 0, 1))
 # 1
 
+# array1 = [1,2,3,4,5]
+# print(array1[-0:])
+# print(array1[:-0])
+# print(array1[0:])
+# print(array1[:])
+# print(array1[:0])
+# print(array1[:-1])
 
+
+# Quiz 3
+# https://codesignal.com/learn/course/94/unit/4/practice/3
+def solution3(array1, array2):
+    # TODO: Your implementation goes here
+    n = len(array1)
+    min_distance = 1000
+    # print("array1: ", array1)
+    # print("array2: ", array2)
+    
+    for i in range(n):
+        rotated = array1[-i:] + array1[:-i]
+        
+        distance = sum(abs(a-b) for a, b in zip(rotated, array2))
+        if min_distance > distance:
+            min_distance = distance
+            best_array = rotated
+            best_array_number = int("".join(map(str,rotated)))
+        elif min_distance == distance:
+            current_array_number = int("".join(map(str,rotated)))
+            if current_array_number < best_array_number:
+                best_array = rotated
+            
+    print(best_array, min_distance)
+    return best_array, min_distance
+
+array1, array2 = [1, 2, 3, 4, 5], [5, 4, 3, 2, 1]
+solution3(array1, array2)
+# [3, 4, 5, 1, 2], 6
