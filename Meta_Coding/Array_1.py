@@ -1,6 +1,99 @@
 # https://medium.com/@johnadjanohoun/metas-most-asked-coding-interview-questions-the-complete-list-of-73-leetcode-problems-47e96767adc7#id_token=eyJhbGciOiJSUzI1NiIsImtpZCI6ImJhYTY0ZWZjMTNlZjIzNmJlOTIxZjkyMmUzYTY3Y2M5OTQxNWRiOWIiLCJ0eXAiOiJKV1QifQ.eyJpc3MiOiJodHRwczovL2FjY291bnRzLmdvb2dsZS5jb20iLCJhenAiOiIyMTYyOTYwMzU4MzQtazFrNnFlMDYwczJ0cDJhMmphbTRsamRjbXMwMHN0dGcuYXBwcy5nb29nbGV1c2VyY29udGVudC5jb20iLCJhdWQiOiIyMTYyOTYwMzU4MzQtazFrNnFlMDYwczJ0cDJhMmphbTRsamRjbXMwMHN0dGcuYXBwcy5nb29nbGV1c2VyY29udGVudC5jb20iLCJzdWIiOiIxMDYwMjQ3NDY2NjI1MDY3ODU3NzgiLCJlbWFpbCI6Imtpc2gxOTE5QGdtYWlsLmNvbSIsImVtYWlsX3ZlcmlmaWVkIjp0cnVlLCJuYmYiOjE3NDg0NTQ4NzAsIm5hbWUiOiLquLDshLHtmZgiLCJwaWN0dXJlIjoiaHR0cHM6Ly9saDMuZ29vZ2xldXNlcmNvbnRlbnQuY29tL2EvQUNnOG9jSWRQVXVsVjlmS1lGODIwdThDZkJ0TGJoWjBJbi1DZElvRzUxMkNxZ2RZT1JSY0xBPXM5Ni1jIiwiZ2l2ZW5fbmFtZSI6IuyEse2ZmCIsImZhbWlseV9uYW1lIjoi6riwIiwiaWF0IjoxNzQ4NDU1MTcwLCJleHAiOjE3NDg0NTg3NzAsImp0aSI6IjE0NmE4ZGFjMGFmOGFkZGRmMTNjMWFiODVlZDE4ZTY4MjViNDZlYjYifQ.paCNTAZo9NxjAKKvE22RFVhi-C8YvQIqQyFeXTZa9--BpPMKzPD3UTQZL3cugDu5uOaq5gcNxklAxnMDTZUCFdBmT-sRvecsmE-HO57xDPJOZYB6G1Jll9Iu0SkxQW_ZUhRIe4sdVMFj42JbQrR5m6ud5viU0EJOpcVTjwCkbDX2oc3BmdFxe53JRQNPc48rrLEq5KtMewzPZzrdlVfc8vLjn-s9PImV1hPxH-SsQw6UcXjcHIkJxV8f7ZxQbW52qeVFBryKewz0oMmIxCfqXq4trXy_2Gi1sJYErrdBvcjpj5vuTVbd2inNM6Wvcf9wtUNzGkZOEsEQ4rpjk_Ak2g
 
 
+# 76. Minimum Window Substring
+# https://leetcode.com/problems/minimum-window-substring/description/?envType=problem-list-v2&envId=nhuldf1t
+
+class Solution:
+    def minWindow(self, s: str, t: str) -> str:
+        if not s or not t:
+            return ""
+
+        # t에 있는 문자와 개수 세기
+        target_count = Counter(t)
+        required = len(target_count)  # t에 있는 고유 문자 개수
+        formed = 0  # 윈도우 내에서 조건을 만족한 문자 개수
+
+        window_count = {}  # 현재 윈도우 안의 문자 개수
+
+        # 결과 저장용: (윈도우 길이, 왼쪽 인덱스, 오른쪽 인덱스)
+        answer = (float("inf"), None, None)
+
+        left = 0  # 왼쪽 포인터
+        for right in range(len(s)):  # 오른쪽 포인터를 하나씩 이동
+            char = s[right]
+            window_count[char] = window_count.get(char, 0) + 1
+
+            # 필요한 문자를 정확히 맞게 채웠다면 formed 증가
+            if char in target_count and window_count[char] == target_count[char]:
+                formed += 1
+
+            # 윈도우가 조건을 만족하면 왼쪽 포인터 이동해서 최소 길이 찾기
+            while left <= right and formed == required:
+                # 현재 윈도우가 더 짧으면 정답 갱신
+                if right - left + 1 < answer[0]:
+                    answer = (right - left + 1, left, right)
+
+                # 왼쪽 문자 줄이기
+                left_char = s[left]
+                window_count[left_char] -= 1
+                if left_char in target_count and window_count[left_char] < target_count[left_char]:
+                    formed -= 1  # 조건 불만족으로 감소
+                left += 1
+
+        # 정답 윈도우가 있으면 자르기
+        if answer[0] == float("inf"):
+            return ""
+        return s[answer[1]:answer[2] + 1]
+    
+
+
+
+# 273. Integer to English Words
+# https://leetcode.com/problems/integer-to-english-words/description/
+
+class Solution:
+    def numberToWords(self, num: int) -> str:
+        if num == 0:
+            return "Zero"
+
+        # 단어 목록
+        LESS_THAN_20 = ["", "One", "Two", "Three", "Four", "Five", "Six", "Seven", "Eight", "Nine", "Ten", 
+                        "Eleven", "Twelve", "Thirteen", "Fourteen", "Fifteen", "Sixteen", 
+                        "Seventeen", "Eighteen", "Nineteen"]
+
+        TENS = ["", "Ten", "Twenty", "Thirty", "Forty", "Fifty", "Sixty", "Seventy", "Eighty", "Ninety"]
+
+        THOUSANDS = ["", "Thousand", "Million", "Billion"]
+
+        def helper(n):
+            if n == 0:
+                return ""
+            elif n < 20:
+                return LESS_THAN_20[n] + " "
+            elif n < 100:
+                return TENS[n // 10] + " " + helper(n % 10)
+            else:
+                return LESS_THAN_20[n // 100] + " Hundred " + helper(n % 100)
+
+        res = ""
+        i = 0
+        while num > 0:
+            if num % 1000 != 0:
+                res = helper(num % 1000) + THOUSANDS[i] + " " + res
+            num //= 1000
+            i += 1
+
+        return res.strip()
+    
+
+
+
+
+
+
+# 3. Longest Substring Without Repeating Characters
+# https://leetcode.com/problems/longest-substring-without-repeating-characters/description/
 def lengthOfLongestSubstring(s: str) -> int:
     char_set = set()
     left = max_len = 0
@@ -14,8 +107,92 @@ def lengthOfLongestSubstring(s: str) -> int:
     print(max_len)
     return max_len
 
+
+class Solution:
+    def lengthOfLongestSubstring(self, s: str) -> int:
+
+        max_len = 0
+        left = 0
+        n = len(s) 
+        visited = set()
+
+        for right in range(n):
+            if s[right] in visited:
+                while left < right and s[right] in visited:
+                    visited.remove(s[left])
+                    left += 1
+            visited.add(s[right])
+            print(visited)
+            max_len = max(max_len, len(visited))
+        print(max_len)
+        return max_len
+
 s = "abcbac"
 lengthOfLongestSubstring(s)
+
+
+# 8. String to Integer (atoi)
+# https://leetcode.com/problems/string-to-integer-atoi/description/?envType=problem-list-v2&envId=nhuldf1t
+
+
+class Solution:
+    def myAtoi(self, s: str) -> int:
+        result = ""
+        # Remove the space
+        s = s.strip()
+        sign = '+'
+
+        if s.startswith('-'):
+            sign = '-'
+            s = s[1:]
+        elif s.startswith('+'):
+            s = s[1:]
+
+        # Remove characters
+        for char in s:
+            if char.isdigit():
+                if char == 0 and result == "":
+                    continue
+                else:
+                    result += char 
+            else:
+                break
+
+        if result == '':
+            return 0
+        else:
+            if sign == "-":
+                result =  int(result) * -1
+            else:
+                result =  int(result)
+        result = min(result, 2**31-1)
+        result = max(result, -2**31)
+        return result
+
+
+class Solution:
+    def myAtoi(self, s: str) -> int:
+        # Remove the space
+        s = s.strip()
+        sign = 1
+
+        if s.startswith('-'):
+            sign = -1
+            s = s[1:]
+        elif s.startswith('+'):
+            s = s[1:]
+
+        current = 0
+        for idx in range(len(s)):
+            if not s[idx].isdigit():
+                break
+            current = current * 10 + int(s[idx])
+
+        current = sign * current
+
+        current = min(current, 2**31-1)
+        current = max(current, -2**31)
+        return current
 
 
 # 13. Roman to Integer
@@ -125,6 +302,34 @@ nums =[1,2,7,6,5,4,3,2,1]
 nextPermutation(nums)
 
 
+
+
+class Solution:
+    def nextPermutation(self, nums: List[int]) -> None:
+        """
+        Do not return anything, modify nums in-place instead.
+        """
+        # 127654321
+        left = len(nums) - 2
+        right = len(nums) - 1
+
+        while nums[left] >= nums[right] and left >= 0 and right >= 1:
+            left -=1
+            right -=1 
+        
+        if left >= 0:
+            right = len(nums) - 1
+            while nums[left] >= nums[right] and left >= 0 and right >=1:
+                right -=1
+            nums[left], nums[right] = nums[right], nums[left]
+        
+        nums[left+1:] = reversed(nums[left+1:])
+
+        print(nums)
+
+
+
+
 # 43. Multiply Strings
 # https://leetcode.com/problems/multiply-strings/
 def multiply(num1, num2):
@@ -146,6 +351,7 @@ def multiply(num1, num2):
 
 
 
+
 def multiply(num1, num2):
 
     res = 0
@@ -158,6 +364,8 @@ def multiply(num1, num2):
             carry2 *= 10
         carry1 *= 10
     return str(res)
+
+    
 
 
 #https://leetcode.com/problems/group-anagrams/
@@ -174,6 +382,22 @@ def groupAnagrams(strs):
     return list(anagrams.values())
 
 
+
+class Solution:
+    def groupAnagrams(self, strs: List[str]) -> List[List[str]]:
+
+        anagrams = {}
+
+        for word in strs:
+            key = "".join(sorted(word))
+            if key not in anagrams:
+                anagrams[key] = []
+            anagrams[key].append(word)
+
+        return list(anagrams.values())
+    
+    
+
 # Add Binary
 # https://leetcode.com/problems/add-binary/submissions/1647431147/
 
@@ -185,5 +409,105 @@ class Solution:
         total = a + b
         return bin(total)[2:]
     
+
+# 88. Merge Sorted Array
+# https://leetcode.com/problems/merge-sorted-array/
+
+class Solution:
+    def merge(self, nums1: List[int], m: int, nums2: List[int], n: int) -> None:
+        """
+        Do not return anything, modify nums1 in-place instead.
+        """
+
+        nums1[m:] = nums2[:]
+        nums1.sort()
+
+# 125. Valid Palindrome
+# https://leetcode.com/problems/valid-palindrome/description/
+class Solution:
+    def isPalindrome(self, s: str) -> bool:
+        
+        ans = ""
+        s = s.strip()
+        for char in s:
+            if char.isalnum():
+                ans += char.lower()
+        return ans == ans[::-1]
+    
+
+
+def read(buf: List[str], n: int) -> int:
+    buf4 = [''] * 4  # read4가 읽은 문자 저장할 임시 버퍼
+    total_read = 0   # 총 읽은 문자 수
+
+    while total_read < n:
+        count = read4(buf4)  # 최대 4글자 읽기
+        if count == 0:  # 파일 끝이면 중단
+            break
+
+        # buf4에서 읽은 문자들을 buf에 복사
+        for i in range(min(count, n - total_read)):
+            buf.append(buf4[i])
+            total_read += 1
+
+    return total_read
+
+
+# 238. Product of Array Except Self
+# https://leetcode.com/problems/product-of-array-except-self/description/
+
+class Solution:
+    def productExceptSelf(self, nums: List[int]) -> List[int]:
+        n = len(nums)
+        answer = []
+
+        for i in range(n):
+            product = 1
+            for j in range(n):
+                if i !=j:
+                    product *= nums[j]
+            answer.append(product)
+        return answer
+    
+
+class Solution:
+    def productExceptSelf(self, nums: List[int]) -> List[int]:
+
+        n = len(nums)
+        answer = [1] * n
+
+        left = 1
+
+        for i in range(n):
+            answer[i] = left
+            left *= nums[i]
+        
+        right = 1
+        for i in range(n-1, -1, -1):
+            answer[i] *= right
+            right *= nums[i]
+
+        return answer
+    
+
+# 283. Move Zeroes
+# https://leetcode.com/problems/move-zeroes/description/
+class Solution:
+    def moveZeroes(self, nums: List[int]) -> None:
+        """
+        Do not return anything, modify nums in-place instead.
+        """
+
+        n = len(nums)
+        i = 0
+
+        for j in range(n):
+            if nums[j] != 0:
+                nums[i], nums[j] = nums[j], nums[i]
+                i += 1
+
+
+# 468. Validate IP Address
+# https://leetcode.com/problems/validate-ip-address/description/
 
 
