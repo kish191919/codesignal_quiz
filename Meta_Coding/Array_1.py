@@ -87,8 +87,70 @@ class Solution:
         return res.strip()
     
 
+# 138. Copy List with Random Pointer
+# https://leetcode.com/problems/copy-list-with-random-pointer/description/
 
 
+class Solution:
+    def copyRandomList(self, head: 'Optional[Node]') -> 'Optional[Node]':
+        if not head:
+            return None
+
+        old_to_new = {}
+
+        # Step 1: 원래 노드를 전부 복사해서 매핑 저장
+        curr = head
+        while curr:
+            old_to_new[curr] = Node(curr.val)
+            curr = curr.next
+
+        # Step 2: 복사된 노드에 next와 random 설정
+        curr = head
+        while curr:
+            new_node = old_to_new[curr]
+            new_node.next = old_to_new.get(curr.next)
+            new_node.random = old_to_new.get(curr.random)
+            curr = curr.next
+
+        return old_to_new[head]
+
+# 143. Reorder List
+# https://leetcode.com/problems/reorder-list/
+
+class Solution:
+    def reorderList(self, head: Optional[ListNode]) -> None:
+        """
+        Do not return anything, modify head in-place instead.
+        """
+        if not head or not head.next:
+            return 
+        
+        slow, fast = head, head
+
+        while fast and fast.next:
+            slow = slow.next
+            fast = fast.next.next
+
+        prev, curr = None, slow.next
+        slow.next = None
+
+        while curr:
+            print("curr: ", curr)
+            next_temp = curr.next
+            curr.next = prev
+            prev = curr
+            curr = next_temp
+            
+        print("prev: ", prev)
+        
+        first, second = head, prev
+        while second:
+            temp1, temp2 = first.next, second.next
+            first.next = second
+            second.next = temp1
+
+            first = temp1
+            second = temp2
 
 
 
@@ -511,3 +573,74 @@ class Solution:
 # https://leetcode.com/problems/validate-ip-address/description/
 
 
+
+
+
+
+
+# 2. Add Two Numbers
+# https://leetcode.com/problems/add-two-numbers/description/?difficulty=EASY
+class Solution:
+    def addTwoNumbers(self, l1: Optional[ListNode], l2: Optional[ListNode],c=0) -> Optional[ListNode]:
+
+        sum_ = l1.val + l2.val + c
+        m = sum_ // 10
+        remain = sum_ % 10
+
+        new_node = ListNode(remain)
+
+        if (l1.next != None) or (l2.next != None) or m != 0:
+            if l1.next == None:
+                l1.next = ListNode(0)
+            if l2.next == None:
+                l2.next = ListNode(0)
+            
+            new_node.next = self.addTwoNumbers(l1.next, l2.next, m)
+        return new_node
+    
+
+
+# 21. Merge Two Sorted Lists
+# https://leetcode.com/problems/merge-two-sorted-lists/description/
+
+class Solution:
+    def mergeTwoLists(self, list1: Optional[ListNode], list2: Optional[ListNode]) -> Optional[ListNode]:
+
+        new_node = result = ListNode()
+
+        while list1 and list2:
+            if list1.val < list2.val:
+                new_node.next = list1
+                list1 = list1.next
+            else:
+                new_node.next = list2
+                list2 = list2.next
+            new_node = new_node.next
+
+        if list1:
+            new_node.next = list1
+        else:
+            new_node.next = list2
+        
+        return result.next
+    
+# 1004. Max Consecutive Ones III
+# https://leetcode.com/problems/max-consecutive-ones-iii/description/
+
+class Solution:
+    def longestOnes(self, nums: List[int], k: int) -> int:
+        left = 0
+        max_len = 0
+        zeros = 0
+
+        for right in range(len(nums)):
+            if nums[right] == 0:
+                zeros += 1
+            
+            while k < zeros:
+                if nums[left] == 0:
+                    zeros -=1
+                left +=1
+            max_len = max(max_len, right-left + 1)
+        return max_len
+    
