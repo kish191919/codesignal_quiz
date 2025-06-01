@@ -364,8 +364,6 @@ nums =[1,2,7,6,5,4,3,2,1]
 nextPermutation(nums)
 
 
-
-
 class Solution:
     def nextPermutation(self, nums: List[int]) -> None:
         """
@@ -390,6 +388,33 @@ class Solution:
         print(nums)
 
 
+class Solution:
+    def nextPermutation(self, nums: List[int]) -> None:
+        """
+        Do not return anything, modify nums in-place instead.
+        """
+        if len(nums) <2:
+            return nums
+        result = []
+
+        for idx in range(len(nums)-2, -1, -1):
+            i = idx
+            
+            if nums[idx] < nums[idx+1]:
+                break
+            print(idx)
+            if idx == 0:
+                return nums.reverse()
+            
+        j = len(nums) -1
+        while nums[i] >= nums[j]:
+            j -= 1
+        
+        nums[i], nums[j] = nums[j], nums[i]
+        print(nums)
+        nums[i+1:] = reversed(nums[i+1:])
+        print(nums)
+        return nums
 
 
 # 43. Multiply Strings
